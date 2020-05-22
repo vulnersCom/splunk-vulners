@@ -1,0 +1,79 @@
+{
+    "supported": {
+      "debian": {
+        "osName": "debian",
+        "packager": "deb",
+        "osType": "linux"
+      },
+      "ubuntu": {
+        "osName": "ubuntu",
+        "packager": "deb",
+        "osType": "linux"
+      },
+      "linuxmint": {
+        "osName": "linuxmint",
+        "packager": "deb",
+        "osType": "linux"
+      },
+      "redhat": {
+        "osName": "redhat",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "centos": {
+        "osName": "centos",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "oraclelinux": {
+        "osName": "oraclelinux",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "fedora": {
+        "osName": "fedora",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "amazon linux": {
+        "osName": "amazon linux",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "suse": {
+        "osName": "suse",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "ol": {
+        "osName": "ol",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "rhel": {
+        "osName": "rhel",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "sles": {
+        "osName": "sles",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "amzn": {
+        "osName": "amzn",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "virtuozzo": {
+        "osName": "virtuozzo",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "acronis": {
+        "osName": "acronis",
+        "packager": "rpm",
+        "osType": "linux"
+      }
+    }
+}

@@ -1,0 +1,16 @@
+<setup>
+  <block title="Configure This App">
+    <text>Setup page for Vulners Dashboard</text>
+  </block>
+
+  <block title="A text input"
+         endpoint="vulners-lookup/doSetup" entity="setupentity">
+
+      <input field="vulners_api_key">
+        <label>Your Vulners API Key</label>
+        <type>text</type>
+      </input>
+
+  </block>
+
+</setup>
