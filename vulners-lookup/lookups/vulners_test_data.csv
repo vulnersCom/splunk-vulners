@@ -1,0 +1,30 @@
+"ip","host","osname","osversion","package","vulnId","title","score","severityText",
+"10.4.43.1","myhost1.com","debian","8","zip-3.0-1.el6_7.1.x86_64","DEBIAN:DLA-2241-2:3E557","[SECURITY] [DLA 2241-2] linux security update",9.2,"critical"
+"10.4.23.2","myhost2.com","debian","9","atlas-3.8.4-2.el6.x86_64","DEBIAN:DLA-2241-1:DE3AB","[SECURITY] [DLA 2241-1] linux security update",7,"high"
+"10.4.23.2","myhost2.com","debian","9","sqlite-3.6.20-1.el6_7.2.x86_64","CVE-1","kernel vulnerability",6.6,"high"
+"10.4.23.2","myhost2.com","debian","9","coreutils-8.4-43.el6.x86_64","CVE-2","some PHP vuln",0.7,"low"
+"10.4.34.3","myhost3.com","centos","7","ruby193-ruby-1.9.3.484-51.el6.x86_64",,,0,
+"10.4.34.3","myhost4.com","centos","7","ruby193-ruby-1.9.3.484-51.el6.x86_64","CVE-4","CVE-2",4.3,"medium"
+"10.4.34.3","myhost4.com","centos","7","ruby193-ruby-1.9.3.484-51.el6.x86_64","CVE-5421-2020","CVE-2",3.8,"medium"
+"10.4.34.5","myhost5.com","centos","7","ruby193-ruby-1.9.3.484-51.el6.x86_64","CVE-501","CVE-50 very critical",9,"critical"
+"10.4.34.5","myhost5.com","centos","7","ruby193-ruby-1.9.3.484-51.el6.x86_64","CVE-502","CVE-50 very critical",8.1,"critical"
+"10.4.34.5","myhost5.com","centos","7","ruby193-ruby-1.9.3.484-51.el6.x86_64","CVE-503","CVE-50 very critical",8.2,"critical"
+"10.4.34.5","myhost5.com","centos","7","ruby193-ruby-1.9.3.484-51.el6.x86_64","CVE-504","CVE-50 very critical",8.3,"critical"
+"10.4.34.5","myhost5.com","centos","7","ruby193-ruby-1.9.3.484-51.el6.x86_64","CVE-505","CVE-50 very critical",9.1,"critical"
+"10.4.34.5","myhost5.com","centos","7","ruby193-ruby-1.9.3.484-51.el6.x86_64","CVE-506","CVE-50 very critical",9.2,"critical"
+"10.4.34.5","myhost5.com","centos","7","ruby193-ruby-1.9.3.484-51.el6.x86_64","CVE-507","CVE-50 very critical",9.7,"critical"
+"10.4.34.6","myhost6.com","centos","7","ruby193-ruby-1.9.3.484-51.el6.x86_64",,,0,
+"10.4.34.7","myhost7.com","centos","7","ruby193-ruby-1.9.3.484-51.el6.x86_64",,,0,
+"10.4.34.8","myhost8.com","centos","7","ruby193-ruby-1.9.3.484-51.el6.x86_64",,,0,
+"10.4.34.9","myhost9.com","centos","7","ruby193-ruby-1.9.3.484-51.el6.x86_64",,,0,
+"10.4.34.10","myhost10.com","centos","7","nss-softokn-3.14.3-23.3.el6_8.x86_64",,,0,
+"10.4.34.11","myhost11.com","centos","7","perl-URI-1.40-2.el6.noarch",,,0,
+"10.4.23.12","myhost12.com","debian","9","iotop-0.3.2-7.el6.noarch","CVE-1","kernel vulnerability",6.6,"high"
+"10.4.23.13","myhost13.com","debian","9","ORBit2-2.14.17-5.el6.x86_64","CVE-2","some PHP vuln",0.7,"low"
+"10.4.34.14","myhost14.com","ubuntu","18.4","device-mapper-persistent-data-0.6.2-0.1.rc7.el6.x86_64","CVE-6501","some low vulnerabilities 6501",2,"low"
+"10.4.34.14","myhost14.com","ubuntu","18.4","erlang-reltool-R14B-04.3.el6.x86_64","CVE-6502","some low vulnerabilities 6502",2.1,"low"
+"10.4.34.14","myhost14.com","ubuntu","18.4","libXcomposite-0.4.3-4.el6.x86_64","CVE-6503","some low vulnerabilities 6503",2.2,"low"
+"10.4.34.14","myhost14.com","ubuntu","18.4","patch-2.6-6.el6.x86_64","CVE-6504","some low vulnerabilities 6504",2.3,"low"
+"10.4.34.14","myhost14.com","ubuntu","18.4","util-linux-ng-2.17.2-12.24.el6.x86_64","CVE-6505","some low vulnerabilities 6505",2.1,"low"
+"10.4.34.14","myhost14.com","ubuntu","18.4","libsigc++20-devel-2.2.4.2-1.el6.x86_64","CVE-6506","some low vulnerabilities 6506",2.2,"low"
+"10.4.34.14","myhost14.com","ubuntu","18.4","openssh-5.3p1-118.1.el6_8.x86_64","CVE-6507","some low vulnerabilities 6507",2.7,"low"

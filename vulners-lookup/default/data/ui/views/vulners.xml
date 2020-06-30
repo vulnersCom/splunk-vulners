@@ -1,0 +1,82 @@
+<dashboard theme="dark" stylesheet="vulners.css">
+    <label>Hosts</label>
+    <description>All vulnerable packages with list of known CVE</description>
+    <row>
+        <panel>
+            <chart>
+                <title>Top Vulnerable hosts</title>
+                <search>
+                    <query>source="vulners_test_data.csv" severityText=*
+                        | stats max(severityText) as severityText sum(score) as score by ip extracted_host osname osversion package vulnId
+                        | chart count over extracted_host by severityText
+                    </query>
+                    <earliest>-124h</earliest>
+                    <latest>now</latest>
+                </search>
+                <option name="charting.chart">bar</option>
+                <option name="charting.axisY.scale">log</option>
+                <option name="charting.seriesColors">[#FF3D00,#ff7043,#81c784 , #ffb74d]</option>
+            </chart>
+        </panel>
+        <panel>
+            <html>
+                <style>
+                    .table-drilldown>tbody>tr>td {
+                    color: #fff!important;
+                    }
+                </style>
+            </html>
+            <table>
+                <title>Top Vulnerabilities</title>
+                <search>
+                    <query>source="vulners_test_data.csv" severityText=* | stats max(score) as score by package title | sort score desc</query>
+                    <earliest>-124h</earliest>
+                    <latest>now</latest>
+                </search>
+                <option name="count">5</option>
+                <format type="color" field="score">
+                    <colorPalette type="list">[#388E3C, #689F38, #7CB342, #FBC02D, #FFA000, #F57C00, #E64A19, #d32f2f, #c62828, #b71c1c]</colorPalette>
+                    <scale type="threshold">1,2,3,4,5,6,7,8,9</scale>
+                </format>
+                <format type="color" field="package">
+                    <colorPalette type="map"></colorPalette>
+                </format>
+            </table>
+        </panel>
+    </row>
+    <row>
+        <panel>
+            <html>
+                <style>
+                    .table-drilldown&gt;tbody&gt;tr&gt;td {
+                    color: white;
+                    }
+                </style>
+            </html>
+            <table>
+                <title>Vulnerable hosts</title>
+                <search>
+                    <query>source="vulners_test_data.csv" severityText=* | stats max(score) as score list(vulnId) as vulnerabilities by ip, extracted_host osname osversion | sort score desc
+                    </query>
+                    <earliest>-124h@h</earliest>
+                    <latest>now</latest>
+                </search>
+                <option name="count">10</option>
+                <option name="dataOverlayMode">none</option>
+                <option name="drilldown">cell</option>
+                <option name="rowNumbers">true</option>
+                <option name="wrap">true</option>
+                <option name="drilldown">cell</option>
+                <drilldown target="_blank">
+                    <condition field="vulnerabilities">
+                        <link>https://vulners.com/vulners/$click.value2$</link>
+                    </condition>
+                </drilldown>
+                <format type="color" field="score">
+                    <colorPalette type="list">[#8BC34A, #CDDC39, #FFEB3B, #FFC107, #FF9800, #FF5722, #e53935, #d32f2f, #c62828, #b71c1c]</colorPalette>
+                    <scale type="threshold">1,2,3,4,5,6,7,8,9</scale>
+                </format>
+            </table>
+        </panel>
+    </row>
+</dashboard>
