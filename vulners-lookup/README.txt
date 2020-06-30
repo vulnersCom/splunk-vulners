@@ -11,4 +11,10 @@ The lookup script makes requests to the external API endpoint at https://vulners
 The forwarder script is largely based on the source code of Vulners Com agent (https://github.com/vulnersCom/vulners-agent), so for now it only works with *nix OS.
 
 Additional requirements
-Set up vulners index please as forwarder depends on it and stores found data there.
+- Set up vulners index please as forwarder depends on it and stores found data there.
+- Set up additional summary index *vulnersresults*
+- Set up a scheduled search:
+```
+index=vulners | lookup vulnerslook os version package output os as osname version as osversion cve as vulnId | eval score="1", ip="10.0.0.1", title="qwerty", severityText="high" | rename host as extracted_host | stats count by severityText ip extracted_host osname osversion package title vulnId score | collect
+```
+as per https://docs.splunk.com/Documentation/Splunk/8.0.4/Knowledge/Usesummaryindexing to save the results in the summary index *vulnersresults*

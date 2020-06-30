@@ -6,7 +6,7 @@
             <chart>
                 <title>Top Vulnerable hosts</title>
                 <search>
-                    <query>source="vulners_test_data.csv" severityText=*
+                    <query>index=vulnersresults
                         | stats max(severityText) as severityText sum(score) as score by ip extracted_host osname osversion package vulnId
                         | chart count over extracted_host by severityText
                     </query>
@@ -29,7 +29,7 @@
             <table>
                 <title>Top Vulnerabilities</title>
                 <search>
-                    <query>source="vulners_test_data.csv" severityText=* | stats max(score) as score by package title | sort score desc</query>
+                    <query>index=vulnersresults | stats max(score) as score by package title | sort score desc</query>
                     <earliest>-124h</earliest>
                     <latest>now</latest>
                 </search>
@@ -56,7 +56,7 @@
             <table>
                 <title>Vulnerable hosts</title>
                 <search>
-                    <query>source="vulners_test_data.csv" severityText=* | stats max(score) as score list(vulnId) as vulnerabilities by ip, extracted_host osname osversion | sort score desc
+                    <query>index=vulnersresults | stats max(score) as score list(vulnId) as vulnerabilities by ip, extracted_host osname osversion | sort score desc
                     </query>
                     <earliest>-124h@h</earliest>
                     <latest>now</latest>

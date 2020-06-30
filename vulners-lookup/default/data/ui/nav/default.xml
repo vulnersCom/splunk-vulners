@@ -1,4 +1,4 @@
-<nav search_view="search" color="#38383a">
+<nav search_view="search">
+  <view name="search" default='true' />
   <view name="vulners" />
-  <a href="https://vulners.com/search?query=order:published" target="_blank">Database</a>
 </nav>
