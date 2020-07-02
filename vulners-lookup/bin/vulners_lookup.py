@@ -12,7 +12,10 @@ import logging
 In fact it simply performs a single request like Vulners Agent does with a list of installed packages.
 """
 
-VULNERS_LINKS = {'pkgChecker':'https://vulners.com/api/v3/audit/audit/'}
+VULNERS_LINKS = {
+    'pkgChecker': 'https://vulners.com/api/v3/audit/audit/',
+    'cveChecker': 'https://vulners.com/api/v3/search/id/'
+}
 
 cfg = cli.getConfStanza('vulners', 'setupentity')
 
@@ -22,6 +25,10 @@ LOG_FILENAME = os.path.join(SPLUNK_HOME, 'var', 'log', 'vulners-lookup', 'Vulner
 LOG_DIRNAME = os.path.dirname(LOG_FILENAME)
 if not os.path.exists(LOG_DIRNAME):
     os.makedirs(LOG_DIRNAME)
+VULNERS_CSV = os.path.join(SPLUNK_HOME, 'etc', 'apps', 'vulners-lookup', 'lookups', 'vulners.csv')
+LOOKUP_DIRNAME = os.path.dirname(VULNERS_CSV)
+if not os.path.exists(LOOKUP_DIRNAME):
+    os.makedirs(LOOKUP_DIRNAME)
 LOG_FORMAT = "[%(asctime)s] %(name)s %(levelname)s: %(message)s"
 logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,format=LOG_FORMAT)
 loggerrrer = logging.getLogger('VulnersLookup')
@@ -29,15 +36,16 @@ loggerrrer = logging.getLogger('VulnersLookup')
 def log(s=""):
     loggerrrer.debug(s)
     
-def lookup(os='ubuntu', version='16.04', packages=('libjpeg-turbo8 1.4.2-0ubuntu3 amd64',)):
+def lookup(osname='ubuntu', osversion='16.04', packages=('libjpeg-turbo8 1.4.2-0ubuntu3 amd64',)):
         """
         Get OS name, its versin and a list of installed packages and perform the actual request to Vulners API.
         """
 
-        payload = {'os': os,
-                   'version': version,
-                   'package': packages,
-                   'apiKey': cfg.get('vulners_api_key', '') 
+        payload = {
+            'os': osname,
+            'version': osversion,
+            'package': packages,
+            'apiKey': cfg.get('vulners_api_key', '')
         }
         headers = {'user-agent': 'Splunk-scan/0.0.1', 'Content-type': 'application/json'}
         try:
@@ -47,6 +55,7 @@ def lookup(os='ubuntu', version='16.04', packages=('libjpeg-turbo8 1.4.2-0ubuntu
         log(res.text)
         if res.status_code == 200 and res.json().get('result') == "OK":
             result = dict()
+            all_cve = list()
             for pkg, info in res.json()['data'].get('packages', {}).items():
                 cvelist = []
                 fix = []
@@ -57,52 +66,103 @@ def lookup(os='ubuntu', version='16.04', packages=('libjpeg-turbo8 1.4.2-0ubuntu
                 fix = list(set(sum(fix, [])))
                 if len(cvelist) or len(fix):
                     result[pkg] = {"cve": cvelist, "fix": fix}
+                    all_cve += cvelist
+            result['all_cve'] = all_cve
             return result
         else:
             log("[vulners_lookup] Error contacting the vulners server")
             log(res.text)
             return {}
 
+def get_cve_info(cve_list=[]):
+    cve_info = dict()
+    payload = {'id': cve_list}
+    headers = {'user-agent': 'Splunk-scan/0.0.1', 'Content-type': 'application/json'}
+    try:
+        res = post(VULNERS_LINKS.get('cveChecker'), headers=headers, data=json.dumps(payload))
+    except Exception as e:
+        log(e)
+    log(res.text)
+    if res.status_code == 200 and res.json().get('result') == "OK":
+        for cve, info in res.json()['data'].get('documents', {}).items():
+            score = info.get('cvss', {}).get('score')
+            vulnersScore = info.get('enchantments', {}).get('vulnersScore')
+            title = info.get('title')
+            severity = info.get('cvss2', {}).get('severity')
+            cve_info[cve] = {
+                "score": score,
+                "vulnersScore": vulnersScore,
+                "title": title,
+                "severityText": severity
+            }
+        return cve_info
+
 def main():
-    if len(sys.argv) != 4:
-        log("Usage: python vulners_lookup.py [os field] [version field] [package field]")
+    if len(sys.argv) != 5:
+        log("Usage: python3 vulners_lookup.py [hostname field] [osname field] [osversion field] [package field]")
         sys.exit(1)
 
-    osfield = sys.argv[1]
-    versionfield = sys.argv[2]
-    packagefield = sys.argv[3]
-    cvefield = 'cve'
-    linkfield = 'link'
-    fixfield =  'fix'
+    hostfield = sys.argv[1]
+    osfield = sys.argv[2]
+    osversionfield = sys.argv[3]
+    packagefield = sys.argv[4]
+    vulnfield = 'vulnId'
+    scorefield = 'score'
+    v_scorefield = 'vulnersScore'
+    titlefield =  'title'
+    severityfield = 'severityText'
 
     infile = sys.stdin
     outfile = sys.stdout
+    v_outfile = open(VULNERS_CSV, 'w')
+
 
     reader = csv.DictReader(infile)
-    header = reader.fieldnames
+    header = reader.fieldnames + [vulnfield, scorefield, v_scorefield, titlefield, severityfield]
 
-    w = csv.DictWriter(outfile, fieldnames=reader.fieldnames+[cvefield, fixfield, linkfield])
+    w = csv.DictWriter(outfile, fieldnames=header)
+    w2 = csv.DictWriter(v_outfile, fieldnames=header)
     w.writeheader()
+    w2.writeheader()
 
-    os, version = '', ''
-    packages = list()
+    hosts = dict()
     for request in reader:
-        os, version, package = request[osfield], request[versionfield], request[packagefield]
-        packages.append(request[packagefield])
-    log(packages)
-    res = lookup(os, version, packages)
-    for pkg, info in res.items():
-        result = {
-            osfield: os,
-            versionfield: version,
-            packagefield: pkg
-        }
-        cvelist = info.get("cve", [])
-        cvel = '\n'.join(("https://vulners.com/cve/"+cve for cve in cvelist))
-        result[cvefield] = cvel
-        fixlist = '\n'.join(info.get("fix", []))
-        result[fixfield] = fixlist
-        result[linkfield] = "https://vulners.com/"
-        w.writerow(result)
+        hostname, osname, osversion, package = request[hostfield], request[osfield], request[osversionfield], request[packagefield]
+        if hostname not in hosts:
+            hosts[hostname] = {osfield: osname, osversionfield: osversion, packagefield: []}
+        hosts[hostname][packagefield].append(request[packagefield])
+
+    all_cve = list()
+    for hostname, host_info in hosts.items():
+        osname = host_info[osfield]
+        osversion = host_info[osversionfield]
+        packages = host_info[packagefield]
+        log("Host %s with "%hostname + str(packages))
+        res = lookup(osname, osversion, packages)
+        host_info['res'] = res
+        all_cve += res.get('all_cve', [])
+        res.pop('all_cve')
+
+    cve_info = get_cve_info(all_cve)
+    for hostname, host_info in hosts.items():
+        osname = host_info[osfield]
+        osversion = host_info[osversionfield]
+        pkg_res = host_info['res']
+        for pkg, info in pkg_res.items():
+            result = {
+                hostfield: hostname,
+                osfield: osname,
+                osversionfield: osversion,
+                packagefield: pkg
+            }
+            cvelist = info.get("cve", [])
+            for cve in cvelist:
+                result[vulnfield] = cve
+                result[scorefield] = cve_info[cve].get('score')
+                result[v_scorefield] = cve_info[cve].get('vulnersScore')
+                result[titlefield] = cve_info[cve].get('title')
+                result[severityfield] = cve_info[cve].get('severityText')
+                w.writerow(result)
+                w2.writerow(result)
 
 main()
