@@ -9,7 +9,8 @@ import logging
 
 """Lookup script that utilizes the Vulners API to check for vulnerabilities of the found packages.
 
-In fact it simply performs a single request like Vulners Agent does with a list of installed packages.
+In fact it simply performs a single request like Vulners Agent does with a list of installed packages for every input host.
+The results are then saved into a local lookup csv file for further use in dashboarding.
 """
 
 VULNERS_LINKS = {
@@ -25,10 +26,12 @@ LOG_FILENAME = os.path.join(SPLUNK_HOME, 'var', 'log', 'vulners-lookup', 'Vulner
 LOG_DIRNAME = os.path.dirname(LOG_FILENAME)
 if not os.path.exists(LOG_DIRNAME):
     os.makedirs(LOG_DIRNAME)
+
 VULNERS_CSV = os.path.join(SPLUNK_HOME, 'etc', 'apps', 'vulners-lookup', 'lookups', 'vulners.csv')
 LOOKUP_DIRNAME = os.path.dirname(VULNERS_CSV)
 if not os.path.exists(LOOKUP_DIRNAME):
     os.makedirs(LOOKUP_DIRNAME)
+
 LOG_FORMAT = "[%(asctime)s] %(name)s %(levelname)s: %(message)s"
 logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,format=LOG_FORMAT)
 loggerrrer = logging.getLogger('VulnersLookup')
@@ -36,9 +39,9 @@ loggerrrer = logging.getLogger('VulnersLookup')
 def log(s=""):
     loggerrrer.debug(s)
     
-def lookup(osname='ubuntu', osversion='16.04', packages=('libjpeg-turbo8 1.4.2-0ubuntu3 amd64',)):
+def lookup(osname='', osversion='', packages=tuple()):
         """
-        Get OS name, its versin and a list of installed packages and perform the actual request to Vulners API.
+        Get OS name, its version and a list of installed packages and perform the actual request to Vulners API.
         """
 
         payload = {
@@ -52,6 +55,7 @@ def lookup(osname='ubuntu', osversion='16.04', packages=('libjpeg-turbo8 1.4.2-0
             res = post(VULNERS_LINKS.get('pkgChecker'), headers=headers, data=json.dumps(payload))
         except Exception as e:
             log(e)
+            return {}
         log(res.text)
         if res.status_code == 200 and res.json().get('result') == "OK":
             result = dict()
@@ -77,7 +81,7 @@ def lookup(osname='ubuntu', osversion='16.04', packages=('libjpeg-turbo8 1.4.2-0
 def get_cve_info(cve_list=[]):
     cve_info = dict()
     payload = {'id': cve_list}
-    headers = {'user-agent': 'Splunk-scan/0.0.1', 'Content-type': 'application/json'}
+    headers = {'user-agent': 'Splunk-scan/0.0.2', 'Content-type': 'application/json'}
     try:
         res = post(VULNERS_LINKS.get('cveChecker'), headers=headers, data=json.dumps(payload))
     except Exception as e:
@@ -164,5 +168,7 @@ def main():
                 result[severityfield] = cve_info[cve].get('severityText')
                 w.writerow(result)
                 w2.writerow(result)
+
+    v_outfile.close()
 
 main()

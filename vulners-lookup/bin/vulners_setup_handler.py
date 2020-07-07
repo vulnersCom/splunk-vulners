@@ -1,8 +1,4 @@
 import splunk.admin as admin
-import splunk.entity as en
-# import your required python modules
-
-import os
 
 '''
 Copyright (C) 2005 - 2010 Splunk Inc. All Rights Reserved.
@@ -56,7 +52,6 @@ class ConfigApp(admin.MConfigHandler):
   normalize them, and save them somewhere
   '''
   def handleEdit(self, confInfo):
-    name = self.callerArgs.id
     args = self.callerArgs
     
     if args.data['vulners_api_key'][0] in [None, '']:
