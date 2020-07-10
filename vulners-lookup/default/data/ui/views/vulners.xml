@@ -7,11 +7,11 @@
                 <title>Top Vulnerable hosts</title>
                 <search>
                     <query>|inputlookup vulners.csv
-                        | stats max(severityText) as severityText sum(score) as score by host os version package vulnId
-                        | chart count over host by severityText
+                        | stats max(severityText) as severityText sum(score) as score by hostname osname osversion package vulnId
+                        | chart count over hostname by severityText
                     </query>
-                    <earliest>-124h</earliest>
-                    <latest>-48h</latest>
+                    <earliest>-24h</earliest>
+                    <latest></latest>
                 </search>
                 <option name="charting.chart">bar</option>
                 <option name="charting.axisY.scale">log</option>
@@ -30,8 +30,8 @@
                 <title>Top Vulnerabilities</title>
                 <search>
                     <query>|inputlookup vulners.csv | stats max(score) as score by package title | sort score desc</query>
-                    <earliest>-124h</earliest>
-                    <latest>-48h</latest>
+                    <earliest>-24h</earliest>
+                    <latest></latest>
                 </search>
                 <option name="count">5</option>
                 <format type="color" field="score">
@@ -56,10 +56,10 @@
             <table>
                 <title>Vulnerable hosts</title>
                 <search>
-                    <query>|inputlookup vulners.csv | stats max(score) as score list(vulnId) as vulnerabilities by host os version | sort score desc
+                    <query>|inputlookup vulners.csv | stats max(score) as score list(vulnId) as vulnerabilities by hostname osname osversion | sort score desc
                     </query>
-                    <earliest>-124h</earliest>
-                    <latest>-48h</latest>
+                    <earliest>-24h</earliest>
+                    <latest></latest>
                 </search>
                 <option name="count">10</option>
                 <option name="dataOverlayMode">none</option>

@@ -62,14 +62,11 @@ def lookup(osname='', osversion='', packages=tuple()):
             all_cve = list()
             for pkg, info in res.json()['data'].get('packages', {}).items():
                 cvelist = []
-                fix = []
                 for vuln_name, desc in info.items():
                     cvelist.append(sum(map(lambda x: x.get("cvelist", []), desc), []))
-                    fix.append(list(map(lambda x: x.get("fix", ""), desc)))
-                cvelist = sum(cvelist, [])
-                fix = list(set(sum(fix, [])))
-                if len(cvelist) or len(fix):
-                    result[pkg] = {"cve": cvelist, "fix": fix}
+                cvelist = list(set(sum(cvelist, [])))
+                if len(cvelist):
+                    result[pkg] = {"cve": cvelist}
                     all_cve += cvelist
             result['all_cve'] = all_cve
             return result
@@ -122,7 +119,7 @@ def main():
 
 
     reader = csv.DictReader(infile)
-    header = reader.fieldnames + [vulnfield, scorefield, v_scorefield, titlefield, severityfield]
+    header = reader.fieldnames
 
     w = csv.DictWriter(outfile, fieldnames=header)
     w2 = csv.DictWriter(v_outfile, fieldnames=header)
@@ -171,4 +168,8 @@ def main():
 
     v_outfile.close()
 
-main()
+
+try:
+    main()
+except Exception as e:
+    log(e)

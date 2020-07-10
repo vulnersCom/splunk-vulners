@@ -5,7 +5,7 @@
     "id": {
       "group": null, 
       "name": "vulners-lookup", 
-      "version": "0.0.1"
+      "version": "0.0.2"
     }, 
     "author": [
       {
@@ -15,7 +15,7 @@
       }
     ], 
     "releaseDate": null, 
-    "description": "Get information from forwarders and show what vulnerable packets you have using Splunk dashboards.", 
+    "description": "Get information from forwarders and show what vulnerable packages you have using Splunk dashboards.",
     "classification": {
       "intendedAudience": null, 
       "categories": [], 
