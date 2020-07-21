@@ -36,9 +36,16 @@ LOG_FORMAT = "[%(asctime)s] %(name)s %(levelname)s: %(message)s"
 logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,format=LOG_FORMAT)
 loggerrrer = logging.getLogger('VulnersLookup')
 
+DEFAULT_HEADERS = {
+    'User-agent': 'Vulners-Splunk-scan/0.0.2',
+    'Content-type': 'application/json'
+}
+
+
 def log(s=""):
     loggerrrer.debug(s)
-    
+
+
 def lookup(osname='', osversion='', packages=tuple()):
         """
         Get OS name, its version and a list of installed packages and perform the actual request to Vulners API.
@@ -50,9 +57,8 @@ def lookup(osname='', osversion='', packages=tuple()):
             'package': packages,
             'apiKey': cfg.get('vulners_api_key', '')
         }
-        headers = {'user-agent': 'Splunk-scan/0.0.1', 'Content-type': 'application/json'}
         try:
-            res = post(VULNERS_LINKS.get('pkgChecker'), headers=headers, data=json.dumps(payload))
+            res = post(VULNERS_LINKS.get('pkgChecker'), headers=DEFAULT_HEADERS, data=json.dumps(payload))
         except Exception as e:
             log(e)
             return {}
@@ -75,12 +81,12 @@ def lookup(osname='', osversion='', packages=tuple()):
             log(res.text)
             return {}
 
+
 def get_cve_info(cve_list=[]):
     cve_info = dict()
     payload = {'id': cve_list}
-    headers = {'user-agent': 'Splunk-scan/0.0.2', 'Content-type': 'application/json'}
     try:
-        res = post(VULNERS_LINKS.get('cveChecker'), headers=headers, data=json.dumps(payload))
+        res = post(VULNERS_LINKS.get('cveChecker'), headers=DEFAULT_HEADERS, data=json.dumps(payload))
     except Exception as e:
         log(e)
     log(res.text)
@@ -97,6 +103,7 @@ def get_cve_info(cve_list=[]):
                 "severityText": severity
             }
         return cve_info
+
 
 def main():
     if len(sys.argv) != 5:

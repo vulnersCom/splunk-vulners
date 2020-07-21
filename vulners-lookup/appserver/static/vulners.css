@@ -1,3 +1,6 @@
 .table-drilldown>tbody>tr>td {
     color: #fff!important;
 }
+.splunk-paginator.splunk-view a.selected.splunk-paginator.splunk-view a.selected {
+    color: #fff!important;
+}

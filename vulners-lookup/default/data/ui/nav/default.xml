@@ -1,5 +1,5 @@
 <nav search_view="search">
-  <view name="search" default='true' />
-  <view name="vulners" />
+  <view name="vulners" default='true' />
   <a href="https://vulners.com/search?query=order:published" target="_blank">Database</a>
+  <view name="search" />
 </nav>

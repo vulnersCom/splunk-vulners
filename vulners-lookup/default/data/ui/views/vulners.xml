@@ -1,5 +1,5 @@
 <dashboard theme="dark" stylesheet="vulners.css">
-    <label>Hosts</label>
+    <label>Dashboard</label>
     <description>All vulnerable packages with list of known CVE</description>
     <row>
         <panel>
@@ -19,13 +19,6 @@
             </chart>
         </panel>
         <panel>
-            <html>
-                <style>
-                    .table-drilldown>tbody>tr>td {
-                    color: #fff!important;
-                    }
-                </style>
-            </html>
             <table>
                 <title>Top Vulnerabilities</title>
                 <search>
