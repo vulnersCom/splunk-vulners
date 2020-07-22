@@ -58,7 +58,6 @@ class Scanner(object):
 
         return packages
 
-    # TODO[gmedian]: uncomment returns when in production
     def run(self):
         os_name, os_version = osdetect.get_os_parameters()
         self.log.debug("OS Detection complete: %s %s" % (os_name, os_version))
@@ -84,5 +83,6 @@ class Scanner(object):
         self.log.debug("Scan complete: %s" % scan_result)
 
         if scan_result:
+            # Just print the found packages to stdout, forwarder would send them over
             print('\n'.join(scan_result))
 
