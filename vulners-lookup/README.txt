@@ -16,6 +16,8 @@ Installation
 To use the app you need to install app itself on search_head and forwarders and
 set up 'vulners' index as forwarder depends on it and stores found data there.
 
+You can also watch a short video on installation process here - https://vimeo.com/440607980
+
 
 1) Installation on search head
 
@@ -33,13 +35,13 @@ Click the "Upload button"
 -------------------------------------------------------------------------------
 Log into the shell for your Splunk server
 Change to the Splunk application folder:
-cd $SPLUNK_HOME/etc/apps
+  cd $SPLUNK_HOME/etc/apps
 Extract the application from the archive file:
-tar xzf <archive location>
+  tar xzf <archive location>
 Verify that the app has the proper permissions for the OS:
-chown -R splunk:splunk $SPLUNK_HOME/etc/apps/vulners-lookup
+  chown -R splunk:splunk $SPLUNK_HOME/etc/apps/vulners-lookup
 Restart Splunk
-$SPLUNK_HOME/bin/splunk restart
+  $SPLUNK_HOME/bin/splunk restart
 -------------------------------------------------------------------------------
 
 2) Create "vulners" index
@@ -54,14 +56,16 @@ Fill the rest of the fields accordingly
 3) Installation on forwarder
 -------------------------------------------------------------------------------
 Log into the shell for your SplunkForwarder server
+Install python3 prerequisites
+  pip3 install distro getmac ifaddr futures
 Change to the SplunkForwarder application folder:
-cd $SPLUNK_HOME/etc/apps
+  cd $SPLUNK_HOME/etc/apps
 Extract the application from the archive file:
-tar xzf <archive location>
+  tar xzf <archive location>
 Verify that the app has the proper permissions for the OS:
-chown -R splunk:splunk $SPLUNK_HOME/etc/apps/vulners-lookup
+  chown -R splunk:splunk $SPLUNK_HOME/etc/apps/vulners-lookup
 Restart Splunk
-$SPLUNK_HOME/bin/splunk restart
+  $SPLUNK_HOME/bin/splunk restart
 
 Configuration:
 -------------------------------------------------------------------------------
