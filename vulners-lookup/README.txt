@@ -1,22 +1,36 @@
-Version 0.0.1
+Version 0.0.2
 
-Application support:
-This is an open source project, no direct support provided, public repository available at https://github.com/vulnersCom/splunk-vulners.
+-------------------------------------------------------------------------------
+Application support
+-------------------------------------------------------------------------------
 
+This is an open source project, public repository available at https://github.com/vulnersCom/splunk-vulners.
+Direct support is available at support@vulners.com
+
+-------------------------------------------------------------------------------
 Description
-This application makes use of Vulners Com API to audit packages installed on the hosts. The application consists of two parts - a lookup script to be installed on the search-head and a collecting script to be installed on the universal forwarder.
-The lookup script makes requests to the external API endpoint at https://vulners.com/api/v3/audit/audit/ with a list of found packages and their versions. The results are stored in a local lookup csv.
-The resulting csv lookup file is later used in the dashboard to provide general overview of vulnerabilities found per host as well as provide links to vulners dot con for further reading.
-The forwarder script is largely based on the source code of Vulners Com agent (https://github.com/vulnersCom/vulners-agent), so for now it only works with *nix OS.
+-------------------------------------------------------------------------------
+
+This application makes use of Vulners Com API to audit packages installed on the hosts.
+The application consists of two parts - a lookup script to be installed on the search-head
+and a collecting script to be installed on the universal forwarder.
+The lookup script makes requests to the external API endpoint at
+https://vulners.com/api/v3/audit/audit/ with a list of found packages and their versions.
+The results are stored in a local lookup csv.
+The resulting csv lookup file is later used in the dashboard to provide general
+overview of vulnerabilities found per host as well as provide links to vulners.com
+for further reading.
+The forwarder script is largely based on the source code of Vulners Com agent
+(https://github.com/vulnersCom/vulners-agent), so for now it only works with *nix OS.
 
 -------------------------------------------------------------------------------
 Installation
 -------------------------------------------------------------------------------
 
 To use the app you need to install app itself on search_head and forwarders and
-set up 'vulners' index as forwarder depends on it and stores found data there.
+set up 'vulners' index as forwarder app depends on it and stores found data there.
 
-You can also watch a short video on installation process here - https://vimeo.com/440607980
+You can also watch a short video about installation process here - https://vimeo.com/440607980
 
 
 1) Installation on search head
@@ -53,7 +67,7 @@ Specify "vulners" as the "Index Name"
 Choose "Vulners Dashboard for Splunk" in the "App" drop-down menu
 Fill the rest of the fields accordingly
 
-3) Installation on forwarder
+3) Installation on universal forwarder
 -------------------------------------------------------------------------------
 Log into the shell for your SplunkForwarder server
 Install python3 prerequisites
@@ -67,9 +81,18 @@ Verify that the app has the proper permissions for the OS:
 Restart Splunk
   $SPLUNK_HOME/bin/splunk restart
 
+
+-------------------------------------------------------------------------------
 Configuration:
 -------------------------------------------------------------------------------
+
 The Vulners Dashboard for Splunk application has a simple configuration interface.
 Before starting configuration of the application, you must have your Vulners API key.
 You can obtain one from https://vulners.com/api-keys. You will be asked for it at the first app launch.
 You can change it any time by reconfiguring application from "Manage Apps" section.
+
+By default forwarder is set to run task to collect packages every 3000 seconds (60 minutes).
+To change that create file
+$SPLUNK_HOME/etc/apps/vulners-lookup/local/inputs.conf
+based on
+$SPLUNK_HOME/etc/apps/vulners-lookup/default/inputs.conf

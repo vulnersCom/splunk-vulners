@@ -672,3 +672,14 @@ may consider it more useful to permit linking proprietary applications with
 the library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
 <http://www.gnu.org/philosophy/why-not-lgpl.html>.
+
+  Vulners.com is solely responsible for the application, including, without
+limitation, any warranties, maintenance and support, notices and consents to
+be given to Users. You agree that Splunk does not in any way warrant the
+accuracy, reliability, completeness, usefulness, non-infringement, or quality
+of this application and that Splunk will not be liable or responsible in any
+way for any losses or damage of any kind, including lost profits or other
+indirect or consequential damages, relating to your use of or reliance upon
+this application. You agree to the foregoing even if the application has
+been examined against best practices for Splunk development, deemed cloud
+compatible, or otherwise vetted by Splunk.
