@@ -84,7 +84,10 @@ def lookup(osname='', osversion='', packages=tuple()):
 
 def get_cve_info(cve_list=[]):
     cve_info = dict()
-    payload = {'id': cve_list}
+    payload = {
+        'id': cve_list,
+        'apiKey': cfg.get('vulners_api_key', '')
+    }
     try:
         res = post(VULNERS_LINKS.get('cveChecker'), headers=DEFAULT_HEADERS, data=json.dumps(payload))
     except Exception as e:
