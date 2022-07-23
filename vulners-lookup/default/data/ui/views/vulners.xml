@@ -1,4 +1,4 @@
-<dashboard theme="dark" stylesheet="vulners.css">
+<dashboard theme="dark" version="1.1" stylesheet="vulners.css">
     <label>Dashboard</label>
     <description>All vulnerable packages with list of known CVE</description>
     <row>
