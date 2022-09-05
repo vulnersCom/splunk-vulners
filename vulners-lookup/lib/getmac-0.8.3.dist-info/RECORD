@@ -1,0 +1,16 @@
+../../../bin/getmac,sha256=ih6PpHbpHOEIwoHxxcWbJrSvhwN4_3nB4LTnzWgzJfA,216
+../../../share/man/man1/getmac.1,sha256=xp_kqadh3PjDb4OaU8D8RQDcakrwl5AMmCnaOUV7ioo,10957
+getmac-0.8.3.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+getmac-0.8.3.dist-info/LICENSE,sha256=KTiIcw3yx3s3PYqpqK9bL423zLatKX9P3GpAloAzNBQ,1094
+getmac-0.8.3.dist-info/METADATA,sha256=VRSWt5TTauHQQDVJtbEr2u-w7wOC9JIodIBmbTehwl8,27343
+getmac-0.8.3.dist-info/RECORD,,
+getmac-0.8.3.dist-info/WHEEL,sha256=Z-nyYpwrcSqxfdux5Mbn_DQ525iP7J2DG3JgGvOYyTQ,110
+getmac-0.8.3.dist-info/entry_points.txt,sha256=TMvudNSXIFHyOkCqn_nBLikfi6eIswzkQ3tMtBzh74Q,49
+getmac-0.8.3.dist-info/top_level.txt,sha256=wENs4GpTOmefJt6z0_QmTc7fzgwCejZGL9cublI131Y,7
+getmac-0.8.3.dist-info/zip-safe,sha256=AbpHGcgLb-kRsJGnwFEktk7uzpZOCcBY74-YBdrKVGs,1
+getmac/__init__.py,sha256=iunkDFEtpGaRw1Y0lzr9OZ7LsZ-GH81E836ZJQC25Vg,80
+getmac/__main__.py,sha256=ju7VeQmSXZTFUeN6uiBcYthon4j2Ip5EP0kztfl8wjM,2220
+getmac/__pycache__/__init__.cpython-37.pyc,,
+getmac/__pycache__/__main__.cpython-37.pyc,,
+getmac/__pycache__/getmac.cpython-37.pyc,,
+getmac/getmac.py,sha256=8cKxXDF6xFe3SruB4D75wnCOkcz3oe7pR7WubuJkZuc,22786

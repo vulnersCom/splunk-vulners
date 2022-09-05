@@ -1,11 +1,13 @@
-from requests import get, post
-from splunk.clilib import cli_common as cli
-
 import os
 import sys
 import csv
 import json
 import logging 
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "lib"))
+from requests import get, post
+from splunk.clilib import cli_common as cli
+import splunklib.client as client
 
 """Lookup script that utilizes the Vulners API to check for vulnerabilities of the found packages.
 
@@ -13,12 +15,21 @@ In fact it simply performs a single request like Vulners Agent does with a list 
 The results are then saved into a local lookup csv file for further use in dashboarding.
 """
 
+cfg = cli.getConfStanza('vulners','setup')
+
+vulners_endpoint = cfg.get('endpoint')
+
 VULNERS_LINKS = {
-    'pkgChecker': 'https://vulners.com/api/v3/audit/audit/',
-    'cveChecker': 'https://vulners.com/api/v3/search/id/'
+    'pkgChecker': vulners_endpoint+'/api/v3/audit/audit/',
+    'cveChecker': vulners_endpoint+'/api/v3/search/id/'
 }
 
-cfg = cli.getConfStanza('vulners', 'setupentity')
+#service = client.connect(...)
+#storage_passwords = service.storage_passwords
+
+#for passwd in storage_passwords:  # type: StoragePassword
+#    if (passwd.realm is None or passwd.realm.strip() == "") and passwd.username == "virustotal":
+#                API_KEY = passwd.clear_password
 
 SPLUNK_HOME = os.environ['SPLUNK_HOME']
 
@@ -37,7 +48,7 @@ logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,format=LOG_FORMAT)
 loggerrrer = logging.getLogger('VulnersLookup')
 
 DEFAULT_HEADERS = {
-    'User-agent': 'Vulners-Splunk-scan/0.0.2',
+    'User-agent': 'Vulners-Splunk-scan/0.0.5',
     'Content-type': 'application/json'
 }
 
@@ -55,7 +66,7 @@ def lookup(osname='', osversion='', packages=tuple()):
             'os': osname,
             'version': osversion,
             'package': packages,
-            'apiKey': cfg.get('vulners_api_key', '')
+            'apiKey': cfg.get('token', '')
         }
         try:
             res = post(VULNERS_LINKS.get('pkgChecker'), headers=DEFAULT_HEADERS, data=json.dumps(payload))
@@ -86,7 +97,7 @@ def get_cve_info(cve_list=[]):
     cve_info = dict()
     payload = {
         'id': cve_list,
-        'apiKey': cfg.get('vulners_api_key', '')
+        'apiKey': cfg.get('token', '')
     }
     try:
         res = post(VULNERS_LINKS.get('cveChecker'), headers=DEFAULT_HEADERS, data=json.dumps(payload))
@@ -94,7 +105,8 @@ def get_cve_info(cve_list=[]):
         log(e)
     log(res.text)
     if res.status_code == 200 and res.json().get('result') == "OK":
-        for cve, info in res.json()['data'].get('documents', {}).items():
+        res = res.json()
+        for cve, info in res['data'].get('documents', {}).items():
             score = info.get('cvss', {}).get('score')
             vulnersScore = info.get('enchantments', {}).get('vulnersScore')
             title = info.get('title')
@@ -137,44 +149,57 @@ def main():
     w2.writeheader()
 
     hosts = dict()
+    os_version_packages = dict()
     for request in reader:
         hostname, osname, osversion, package = request[hostfield], request[osfield], request[osversionfield], request[packagefield]
         if hostname not in hosts:
             hosts[hostname] = {osfield: osname, osversionfield: osversion, packagefield: []}
-        hosts[hostname][packagefield].append(request[packagefield])
+        hosts[hostname][packagefield].append(package)
+        if osname not in os_version_packages:
+            os_version_packages[osname] = dict()
+        if osversion not in os_version_packages[osname]:
+            os_version_packages[osname][osversion] = {packagefield: []}
+        if package not in os_version_packages[osname][osversion][packagefield]:
+            os_version_packages[osname][osversion][packagefield].append(package)
 
     all_cve = list()
+
+    for osname, os_details in os_version_packages.items():
+       for osversion, package_info in os_details.items():
+           packages = package_info[packagefield]
+           res = lookup(osname, osversion, packages)
+           all_cve += res.get('all_cve', [])
+           res.pop('all_cve')
+           os_version_packages[osname][osversion]['res'] = res
+
     for hostname, host_info in hosts.items():
         osname = host_info[osfield]
         osversion = host_info[osversionfield]
         packages = host_info[packagefield]
         log("Host %s with "%hostname + str(packages))
-        res = lookup(osname, osversion, packages)
-        host_info['res'] = res
-        all_cve += res.get('all_cve', [])
-        res.pop('all_cve')
 
     cve_info = get_cve_info(all_cve)
     for hostname, host_info in hosts.items():
         osname = host_info[osfield]
         osversion = host_info[osversionfield]
-        pkg_res = host_info['res']
-        for pkg, info in pkg_res.items():
-            result = {
-                hostfield: hostname,
-                osfield: osname,
-                osversionfield: osversion,
-                packagefield: pkg
-            }
-            cvelist = info.get("cve", [])
-            for cve in cvelist:
-                result[vulnfield] = cve
-                result[scorefield] = cve_info[cve].get('score')
-                result[v_scorefield] = cve_info[cve].get('vulnersScore')
-                result[titlefield] = cve_info[cve].get('title')
-                result[severityfield] = cve_info[cve].get('severityText')
-                w.writerow(result)
-                w2.writerow(result)
+        for pkg in host_info[packagefield]:
+            for pkg_res_name,pkg_res_data in os_version_packages[osname][osversion]['res'].items():
+                if pkg == pkg_res_name:
+                    result = {
+                        hostfield: hostname,
+                        osfield: osname,
+                        osversionfield: osversion,
+                        packagefield: pkg
+                    }
+                    cvelist = pkg_res_data.get("cve", [])
+                    for cve in cvelist:
+                        result[vulnfield] = cve
+                        result[scorefield] = cve_info[cve].get('score')
+                        result[v_scorefield] = cve_info[cve].get('vulnersScore')
+                        result[titlefield] = cve_info[cve].get('title')
+                        result[severityfield] = cve_info[cve].get('severityText')
+                        w.writerow(result)
+                        w2.writerow(result)
 
     v_outfile.close()
 
