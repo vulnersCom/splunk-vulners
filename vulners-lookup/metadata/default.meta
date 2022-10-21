@@ -1,22 +1,6 @@
 []
 access = read : [ * ], write : [ admin, power ]
-export = none
-
-[tags]
 export = system
 
-[props]
-export = system
-
-[transforms]
-export = system
-
-[lookups]
-export = system
-
-[searchscripts]
-export = system 
-
-[viewstates]
-access = read : [ * ], write : [ * ]
-export = system
+[passwords]
+access = read : [ admin, power ], write : [ admin, power ]

@@ -41,10 +41,10 @@
            e("form", { onSubmit: this.handleSubmit }, [
              e("label", null,"Vulners Api Token"),
              e("input", { type: "text", name: "vulners_api_token", value: this.state.vulners_api_token, onChange: this.handleChange }),
-             e("small", { class: 'setup_small'}, "Use your API Token from https://vulners.com/ website."),
+             e("small", { class: 'setup_small'}, "Use your API Token from https://vulners.com/ platform."),
              e("label", null, "Vulners Endpoint"),
              e("input", { type: "text", name: "vulners_endpoint_value", value: this.state.vulners_endpoint_value, onChange: this.handleChange }),
-             e("small", { class: 'setup_small'}, "Set your custom Vulners Proxy Endpoint or https://vulners.com otherwise."),
+             e("small", { class: 'setup_small'}, "Set your custom Vulners Proxy endpoint (set empty to use default https://vulners.com endpoint). Example: http://192.168.1.1:8000. Read more about Vulners Proxy on https://github.com/vulnersCom/vulners-proxy."),
              e("input", { type: "submit", value: "Save configuration" })
            ])
          ])

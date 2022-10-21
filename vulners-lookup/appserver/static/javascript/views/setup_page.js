@@ -7,8 +7,8 @@ import * as StoragePasswords from './storage_passwords.js'
 const CUSTOM_CONF = 'vulners'
 const CUSTOM_CONF_STANZA = 'setup'
 
-//const SECRET_REALM = 'vulners_api_token_realm'
-//const SECRET_NAME = 'vulners_api_token'
+const SECRET_REALM = 'vulners_api_token_realm'
+const SECRET_NAME = 'vulners_api_token'
 
 export async function perform(splunk_js_sdk, setup_options) {
     var app_name = "vulners-lookup";
@@ -30,27 +30,22 @@ export async function perform(splunk_js_sdk, setup_options) {
 
         // // Get conf and do stuff to it
         // await Splunk.update_configuration_file(
-        await Splunk.update_configuration_file(
-            splunk_js_sdk_service,
-            CUSTOM_CONF,
-            CUSTOM_CONF_STANZA,
-            { endpoint : vulners_endpoint_value }
-        )
 
-        await Splunk.update_configuration_file(
+        if (vulners_endpoint_value !== undefined) {
+            await Splunk.update_configuration_file(
+                splunk_js_sdk_service,
+                CUSTOM_CONF,
+                CUSTOM_CONF_STANZA,
+                { vulners_endpoint : vulners_endpoint_value }
+            )
+        }
+        
+        await StoragePasswords.write_secret(
             splunk_js_sdk_service,
-            CUSTOM_CONF,
-            CUSTOM_CONF_STANZA,
+            SECRET_REALM,
+            SECRET_NAME,
             { token : vulners_api_token }
         )
-        
-        // Write token to passwords.conf
-        //await StoragePasswords.write_secret(
-        //    splunk_js_sdk_service,
-        //    SECRET_REALM,
-        //    SECRET_NAME,
-        //    token
-        //)
 
         // Completes the setup, by access the app.conf's [install]
         // stanza and then setting the `is_configured` to true
