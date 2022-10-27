@@ -254,7 +254,7 @@ class GetVulnersDataCommand(EventingCommand):
         if not os.path.exists(LOOKUP_DIRNAME):
             os.makedirs(LOOKUP_DIRNAME)
 
-        csv_lookup_outfile = open(VULNERS_CSV, 'w')
+        csv_lookup_outfile = open(VULNERS_CSV, 'w', newline='', encoding='utf-8')
         csv_header = [ hostsfield, osnamefield, osversionfield, packagefield, vulnfield, scorefield, vulners_scorefield, severityfield, vectorfield ]
         if self.show_description:
             csv_header.append(descriptionfield)
