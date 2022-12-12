@@ -9,4 +9,4 @@ slim package -o result/ ./vulners-lookup/
 # Make sure to install the correct version of semantic-version package though with "pip install 'semantic_version==2.6.0'"
 # Another version has a bug preventing you from splitting the package into deployment units
 
-# slim partition -o deployment-units/ ./result/vulners-lookup-0.0.1.tar.gz
+# slim partition -o deployment-units/ ./result/vulners-lookup-0.0.5.tar.gz

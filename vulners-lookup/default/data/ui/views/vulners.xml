@@ -6,10 +6,15 @@
             <chart>
                 <title>Top Vulnerable hosts</title>
                 <search>
-                    <query>|inputlookup vulners.csv
-                        | stats max(severityText) as severityText sum(score) as score by hostname osname osversion package vulnId
-                        | chart count over hostname by severityText
-                    </query>
+                    <query><![CDATA[ 
+                        | inputlookup vulners.csv
+                        | fields vulnId hosts osname osversion package severityText scoreCVSS
+                        | rename hosts as host
+                        | makemv host
+                        | mvexpand host
+                        | stats max(severityText) as severityText values(scoreCVSS) as scoreCVSS by host osname osversion package vulnId
+                        | chart count over host by severityText
+                    ]]></query>
                     <earliest>-24h</earliest>
                     <latest></latest>
                 </search>
@@ -22,7 +27,11 @@
             <table>
                 <title>Top Vulnerabilities</title>
                 <search>
-                    <query>|inputlookup vulners.csv | stats max(score) as score by package title | sort score desc</query>
+                    <query><![CDATA[ 
+                        | inputlookup vulners.csv
+                        | stats max(scoreCVSS) as scoreCVSS by package vulnId 
+                        | sort - scoreCVSS
+                    ]]></query>
                     <earliest>-24h</earliest>
                     <latest></latest>
                 </search>
@@ -49,8 +58,15 @@
             <table>
                 <title>Vulnerable hosts</title>
                 <search>
-                    <query>|inputlookup vulners.csv | stats max(score) as score list(vulnId) as vulnerabilities by hostname osname osversion | sort score desc
-                    </query>
+                    <query><![CDATA[ 
+                        | inputlookup vulners.csv
+                        | fields vulnId hosts osname osversion package severityText scoreCVSS
+                        | rename hosts as host
+                        | makemv host
+                        | mvexpand host
+                        | stats max(scoreCVSS) as scoreCVSS values(vulnId) as vulnerabilities by host osname osversion 
+                        | sort - score
+                    ]]></query>
                     <earliest>-24h</earliest>
                     <latest></latest>
                 </search>
