@@ -30,6 +30,11 @@
         "packager": "rpm",
         "osType": "linux"
       },
+      "oracle": {
+        "osName": "oracle",
+        "packager": "rpm",
+        "osType": "linux"
+      },
       "fedora": {
         "osName": "fedora",
         "packager": "rpm",
@@ -74,6 +79,31 @@
         "osName": "acronis",
         "packager": "rpm",
         "osType": "linux"
+      },
+      "almalinux": {
+        "osName": "almalinux",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "photon": {
+        "osName": "photon",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "rocky": {
+        "osName": "rocky",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "alt linux": {
+        "osName": "alt linux",
+        "packager": "rpm",
+        "osType": "linux"
+      },
+      "alpine": {
+        "osName": "alpine",
+        "packager": "apk",
+        "osType": "linux"
       }
     }
-}
+  }

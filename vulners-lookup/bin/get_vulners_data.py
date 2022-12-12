@@ -38,7 +38,7 @@ class GetVulnersDataCommand(EventingCommand):
     }
 
     DEFAULT_HEADERS = {
-        'User-agent': 'Vulners-Splunk-scan/0.0.5',
+        'User-agent': 'Vulners-Splunk-scan/0.0.6',
         'Content-type': 'application/json'
     }
     
