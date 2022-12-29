@@ -28,7 +28,7 @@ class GetVulnersDataCommand(EventingCommand):
     token_realm = 'vulners_api_token_realm'
 
     cfg = cli.getConfStanza('vulners','setup')
-    vulners_endpoint = cfg.get('vulners_endpoint')
+    vulners_endpoint = 'https://' + cfg.get('vulners_endpoint')
     exploits_search_chunk_size = int(cfg.get('exploits_batch_size'))
 
     VULNERS_LINKS = {
@@ -38,7 +38,7 @@ class GetVulnersDataCommand(EventingCommand):
     }
 
     DEFAULT_HEADERS = {
-        'User-agent': 'Vulners-Splunk-scan/0.0.6',
+        'User-agent': 'Vulners-Splunk-scan/0.0.7',
         'Content-type': 'application/json'
     }
     

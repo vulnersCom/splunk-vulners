@@ -44,7 +44,7 @@
              e("small", { class: 'setup_small'}, "Use your API Token from https://vulners.com/ platform."),
              e("label", null, "Vulners Endpoint"),
              e("input", { type: "text", name: "vulners_endpoint_value", value: this.state.vulners_endpoint_value, onChange: this.handleChange }),
-             e("small", { class: 'setup_small'}, "Set your custom Vulners Proxy endpoint (set empty to use default https://vulners.com endpoint). Example: http://192.168.1.1:8000. Read more about Vulners Proxy on https://github.com/vulnersCom/vulners-proxy."),
+             e("small", { class: 'setup_small'}, "Set your custom Vulners Proxy domain name (set empty to use default vulners.com endpoint). Example: 192.168.1.1:8000. Note that Splunk requires all requests be sent over https, so this value is used as a server_name rather than a whole URL. Read more about Vulners Proxy on https://github.com/vulnersCom/vulners-proxy."),
              e("input", { type: "submit", value: "Save configuration" })
            ])
          ])

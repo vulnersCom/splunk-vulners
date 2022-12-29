@@ -1,4 +1,4 @@
-Version 0.0.6
+Version 0.0.7
 
 -------------------------------------------------------------------------------
 Application support
@@ -159,8 +159,12 @@ You can obtain one from https://vulners.com/api-keys. You will be asked for it a
 You can change it any time by reconfiguring application from "Manage Apps" section.
 You can also set your custom Vulners Proxy endpoint in setup page at the first app launch.
 
-By default forwarder is set to run task to collect packages every 3000 seconds (60 minutes).
+By default forwarder is set to run task to collect packages every 3600 seconds (60 minutes).
 To change that create file
 $SPLUNK_HOME/etc/apps/vulners-lookup/local/inputs.conf
 based on
 $SPLUNK_HOME/etc/apps/vulners-lookup/default/inputs.conf
+
+The Vulners App for Splunk also includes a saved search with cron for updating info on vulnerabilities on search heads.
+To make use of it enable cron in savedsearches.conf
+  Set disabled = 0
